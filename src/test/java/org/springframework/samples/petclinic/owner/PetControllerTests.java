@@ -101,6 +101,20 @@ class PetControllerTests {
 	}
 
 	@Test
+	void testProcessCreationPetBirthDateInTheFuture() throws Exception {
+		mockMvc
+			.perform(post("/owners/{ownerId}/pets/new", TEST_OWNER_ID).param("name", "Betty")
+				.param("birthDate", "2030-12-12"))
+			.andExpect(model().attributeHasNoErrors("owner"))
+			.andExpect(model().attributeHasErrors("pet"))
+			.andExpect(model().attributeHasFieldErrors("pet", "type"))
+			.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
+			.andExpect(model().attributeHasFieldErrorCode("pet", "type", "required"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("pets/createOrUpdatePetForm"));
+	}
+
+	@Test
 	void testInitUpdateForm() throws Exception {
 		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID))
 			.andExpect(status().isOk())
