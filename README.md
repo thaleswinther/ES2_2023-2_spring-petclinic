@@ -1,4 +1,4 @@
-# ES2_2023-2_string-petclinic
+# ES2_2023-2_spring-petclinic
 
 ## GitHub dos colaboradores
 * [Arisa Abiko Sakaguti](https://github.com/arisaabiko)
