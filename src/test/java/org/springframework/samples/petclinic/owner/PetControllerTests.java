@@ -117,8 +117,7 @@ class PetControllerTests {
 	@Test
 	void testProcessUpdatePetBirthDateInTheFuture() throws Exception {
 		mockMvc
-			.perform(post("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID)
-				.param("name", "Betty")
+			.perform(post("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).param("name", "Betty")
 				.param("birthDate", "2030-12-12"))
 			.andExpect(model().attributeHasNoErrors("owner"))
 			.andExpect(model().attributeHasErrors("pet"))
