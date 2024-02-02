@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.vet;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,12 +43,24 @@ class VetController {
 	}
 
 	@GetMapping("/vets.html")
-	public String showVetList(@RequestParam(defaultValue = "1") int page, Model model) {
-		// Here we are returning an object of type 'Vets' rather than a collection of Vet
-		// objects so it is simpler for Object-Xml mapping
+	public String showVetList(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(required = false) String specialty, Model model) {
 		Vets vets = new Vets();
-		Page<Vet> paginated = findPaginated(page);
+		Page<Vet> paginated;
+
+		if (specialty != null && !specialty.isEmpty()) {
+			paginated = vetRepository.findBySpecialtiesName(specialty, findPaginated(page).getPageable());
+		}
+		else {
+			paginated = findPaginated(page);
+		}
+
 		vets.getVetList().addAll(paginated.toList());
+
+		Set<String> specialties = vetRepository.findAllSpecialties();
+		model.addAttribute("specialties", specialties);
+		model.addAttribute("selectedSpecialty", specialty);
+
 		return addPaginationModel(page, paginated, model);
 	}
 
