@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,6 +37,7 @@ import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledInNativeImage;
@@ -100,6 +102,28 @@ class OwnerControllerTests {
 		visit.setDate(LocalDate.now());
 		george.getPet("Max").getVisits().add(visit);
 
+	}
+
+	@Test
+	void testGetPetByNonExistingId() {
+		// Arrange
+		Owner owner = new Owner();
+		owner.setId(1);
+		Pet pet1 = new Pet();
+		pet1.setId(1);
+		pet1.setName("Max");
+		owner.addPet(pet1);
+		Pet pet2 = new Pet();
+		pet2.setId(2);
+		pet2.setName("Buddy");
+		owner.addPet(pet2);
+		given(owners.findById(1)).willReturn(owner);
+
+		// Act
+		Pet foundPet = owner.getPet(3);
+
+		// Assert
+		Assertions.assertNull(foundPet);
 	}
 
 	@Test
