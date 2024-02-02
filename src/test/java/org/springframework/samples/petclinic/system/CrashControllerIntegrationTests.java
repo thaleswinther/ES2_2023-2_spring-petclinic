@@ -67,11 +67,13 @@ class CrashControllerIntegrationTests {
 				RequestEntity.get("http://localhost:" + port + "/oups").build(),
 				new ParameterizedTypeReference<Map<String, Object>>() {
 				});
-		assertThat(resp).isNotNull();
-		assertThat(resp.getStatusCode().is5xxServerError());
-		assertThat(resp.getBody().containsKey("timestamp"));
-		assertThat(resp.getBody().containsKey("status"));
-		assertThat(resp.getBody().containsKey("error"));
+		assertThat(resp).isNotNull()
+			.extracting(ResponseEntity::getStatusCode)
+			.satisfies(statusCode -> assertThat(statusCode.is5xxServerError()).isTrue());
+
+		assertThat(resp.getBody()).isNotNull()
+			.as("Response body map should contain keys: timestamp, status, error")
+			.containsKeys("timestamp", "status", "error");
 		assertThat(resp.getBody()).containsEntry("message",
 				"Expected: controller used to showcase what happens when an exception is thrown");
 		assertThat(resp.getBody()).containsEntry("path", "/oups");
@@ -84,7 +86,7 @@ class CrashControllerIntegrationTests {
 		ResponseEntity<String> resp = rest.exchange("http://localhost:" + port + "/oups", HttpMethod.GET,
 				new HttpEntity<>(headers), String.class);
 		assertThat(resp).isNotNull();
-		assertThat(resp.getStatusCode().is5xxServerError());
+		assertThat(resp.getStatusCode().is5xxServerError()).isTrue();
 		assertThat(resp.getBody()).isNotNull();
 		// html:
 		assertThat(resp.getBody()).containsSubsequence("<body>", "<h2>", "Something happened...", "</h2>", "<p>",
