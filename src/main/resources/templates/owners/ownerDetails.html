@@ -37,17 +37,26 @@
     <br />
     <br />
     <h2>Pets and Visits</h2>
-  
+
+    <form th:action="@{'/owners/' + ${owner.id}}" method="get">
+      <label for="petFilter">Filter Pets by Name:</label>
+      <select id="petName" name="petName">
+        <option value="" th:selected="${selectedPetName == null or selectedPetName == ''}">All Pets</option>
+        <option th:each="pet : ${owner.pets}" th:value="${pet.name}" th:text="${pet.name}"></option>
+      </select>
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+
+
     <table class="table table-striped">
-  
-      <tr th:each="pet : ${owner.pets}">
+      <tr th:each="pet : ${listPets}">
         <td valign="top">
           <dl class="dl-horizontal">
             <dt>Name</dt>
             <dd th:text="${pet.name}"></dd>
             <dt>Birth Date</dt>
-            <dd
-              th:text="${#temporals.format(pet.birthDate, 'yyyy-MM-dd')}"></dd>
+            <dd th:text="${#temporals.format(pet.birthDate, 'yyyy-MM-dd')}"></dd>
             <dt>Type</dt>
             <dd th:text="${pet.type}"></dd>
           </dl>
@@ -55,10 +64,10 @@
         <td valign="top">
           <table class="table-condensed">
             <thead>
-              <tr>
-                <th>Visit Date</th>
-                <th>Description</th>
-              </tr>
+            <tr>
+              <th>Visit Date</th>
+              <th>Description</th>
+            </tr>
             </thead>
             <tr th:each="visit : ${pet.visits}">
               <td th:text="${#temporals.format(visit.date, 'yyyy-MM-dd')}"></td>
@@ -71,9 +80,7 @@
           </table>
         </td>
       </tr>
-  
     </table>
-  
-  </body>
 
+  </body>
 </html>
