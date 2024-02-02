@@ -47,6 +47,7 @@ public class PetClinicIntegrationTests {
 	void testFindAll() throws Exception {
 		vets.findAll();
 		vets.findAll(); // served from cache
+		assertThat(vets.findAll()).isNotNull();
 	}
 
 	@Test
