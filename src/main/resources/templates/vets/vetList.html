@@ -6,9 +6,13 @@
 <body>
 
 <h2>Veterinarians</h2>
+
 <form action="/vets.html" method="get">
   <label for="specialty">Filter by Specialty:</label>
-  <input type="text" id="specialty" name="specialty" th:value="${specialty}" />
+  <select id="specialty" name="specialty" th:value="${selectedSpecialty}">
+    <option value="">All Specialties</option>
+    <option th:each="sp : ${specialties}" th:value="${sp}" th:text="${sp}"></option>
+  </select>
   <button type="submit">Apply</button>
 </form>
 

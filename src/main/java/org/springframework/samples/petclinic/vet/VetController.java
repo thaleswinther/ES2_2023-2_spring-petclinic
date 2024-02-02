@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.vet;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,7 +56,11 @@ class VetController {
 		}
 
 		vets.getVetList().addAll(paginated.toList());
-		model.addAttribute("specialty", specialty);
+
+		Set<String> specialties = vetRepository.findAllSpecialties();
+		model.addAttribute("specialties", specialties);
+		model.addAttribute("selectedSpecialty", specialty);
+
 		return addPaginationModel(page, paginated, model);
 	}
 
