@@ -55,4 +55,8 @@ public interface VetRepository extends Repository<Vet, Integer> {
 	@Cacheable("vets")
 	Page<Vet> findAll(Pageable pageable) throws DataAccessException;
 
+	@Transactional(readOnly = true)
+	@Cacheable("vets")
+	Page<Vet> findBySpecialtiesName(String specialtyName, Pageable pageable) throws DataAccessException;
+
 }

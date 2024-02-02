@@ -6,6 +6,11 @@
 <body>
 
 <h2>Veterinarians</h2>
+<form action="/vets.html" method="get">
+  <label for="specialty">Filter by Specialty:</label>
+  <input type="text" id="specialty" name="specialty" th:value="${specialty}" />
+  <button type="submit">Apply</button>
+</form>
 
 <table id="vets" class="table table-striped">
   <thead>
