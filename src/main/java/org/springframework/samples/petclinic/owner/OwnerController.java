@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.owner;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -150,10 +151,28 @@ class OwnerController {
 	 * @return a ModelMap with the model attributes for the view
 	 */
 	@GetMapping("/owners/{ownerId}")
-	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
+	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId,
+			@RequestParam(name = "petFilter", required = false) String petFilter,
+			@RequestParam(name = "petName", required = false) String petName) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = this.owners.findById(ownerId);
+
+		if (petName != null && !petName.isEmpty()) {
+			List<Pet> filteredPets = owner.getPets()
+				.stream()
+				.filter(pet -> pet.getName().equalsIgnoreCase(petName))
+				.collect(Collectors.toList());
+
+			mav.addObject("listPets", filteredPets);
+			mav.addObject("selectedPetName", petName);
+		}
+		else {
+			mav.addObject("listPets", owner.getPets());
+			mav.addObject("selectedPetName", "");
+		}
+
 		mav.addObject(owner);
+
 		return mav;
 	}
 
